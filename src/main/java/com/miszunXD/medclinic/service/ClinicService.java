@@ -10,7 +10,11 @@ import com.miszunXD.medclinic.repository.DoctorRepository;
 import com.miszunXD.medclinic.repository.PatientRepository;
 
 import javax.swing.text.html.Option;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class ClinicService {
     private final AppointmentRepository appointmentRepository;
@@ -76,8 +80,36 @@ public class ClinicService {
         );
 
         appointmentRepository.updateAppointment(cancelledAppointment);
-
     }
 
+    public List<Appointment> patientAppointmentHistory(String pesel) {
+        return appointmentRepository.findAll().stream()
+                .filter(p -> p.patientPesel().equals(pesel))
+                .filter(a -> !a.isCancelled())
+                .sorted(Comparator.comparing(Appointment::dateTime).reversed())
+                .toList();
+    }
 
+    public String mostExpensiveDoctors() {
+        return doctorRepository.findAll().stream()
+                .sorted(Comparator.comparing(Doctor::visitPrice).reversed())
+                .limit(3)
+                .map(Doctor::fullName)
+                .collect(Collectors.joining(", "));
+    }
+
+    public Map<String, List<Doctor>> doctorsCatalogue() {
+        return doctorRepository.findAll().stream()
+                .collect(Collectors.groupingBy(Doctor::specialty));
+    }
+
+    public double doctorEarnings(String doctorId) {
+        Doctor doctor = doctorRepository.findById(doctorId).orElseThrow();
+
+        return appointmentRepository.findAll().stream()
+                .filter(a -> a.doctorId().equals(doctorId))
+                .filter(a -> !a.isCancelled())
+                .mapToDouble(d -> doctor.visitPrice())
+                .sum();
+    }
 }
