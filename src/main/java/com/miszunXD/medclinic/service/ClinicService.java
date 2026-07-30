@@ -9,7 +9,6 @@ import com.miszunXD.medclinic.repository.AppointmentRepository;
 import com.miszunXD.medclinic.repository.DoctorRepository;
 import com.miszunXD.medclinic.repository.PatientRepository;
 
-import javax.swing.text.html.Option;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;

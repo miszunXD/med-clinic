@@ -1,0 +1,25 @@
+[ {
+  "pesel" : "90051512345",
+  "fullName" : "Michał Wiśniewski",
+  "phoneNumber" : "123456789"
+}, {
+  "pesel" : "85022098765",
+  "fullName" : "Katarzyna Zielińska",
+  "phoneNumber" : "987654321"
+}, {
+  "pesel" : "78110356789",
+  "fullName" : "Andrzej Dąbrowski",
+  "phoneNumber" : "555666777"
+}, {
+  "pesel" : "95072211122",
+  "fullName" : "Magdalena Wójcik",
+  "phoneNumber" : "111222333"
+}, {
+  "pesel" : "60011533344",
+  "fullName" : "Krzysztof Kowalczyk",
+  "phoneNumber" : "444555666"
+}, {
+  "pesel" : "90050367990",
+  "fullName" : "Filip Karpiński",
+  "phoneNumber" : "888999005"
+} ]
