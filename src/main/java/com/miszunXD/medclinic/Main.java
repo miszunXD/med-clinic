@@ -1,5 +1,6 @@
 package com.miszunXD.medclinic;
 
+import com.miszunXD.medclinic.exception.AppointmentNotFoundException;
 import com.miszunXD.medclinic.exception.DoubleBookingException;
 import com.miszunXD.medclinic.exception.PatientAlreadyExistsException;
 import com.miszunXD.medclinic.model.Appointment;
@@ -50,8 +51,7 @@ public class Main {
             System.out.println("10. Łączny przychód wybranego lekarza");
             System.out.println("0. Wyjście z programu i zapis plików");
 
-            int choice = scanner.nextInt();
-            scanner.nextLine();
+            int choice = readInt(scanner);
 
             switch (choice) {
                 case 1 -> printDoctors(clinicService);
@@ -160,7 +160,7 @@ public class Main {
         try {
             clinicService.cancelAppointment(appointmentId);
             System.out.println("Wizyty anulowana!");
-        } catch (RuntimeException e) {
+        } catch (AppointmentNotFoundException e) {
             System.out.println(e.getMessage());
         }
     }
@@ -220,6 +220,18 @@ public class Main {
     private static void saveAndExit(ClinicService clinicService) {
         clinicService.saveAll();
         System.out.println("Pliki zapisane. Do widzenia!");
+    }
+
+    private static int readInt(Scanner scanner) {
+        while (!scanner.hasNextInt()) {
+            System.out.println("Podaj liczbę!");
+            scanner.nextLine();
+        }
+
+        int number = scanner.nextInt();
+        scanner.nextLine();
+
+        return number;
     }
 
 }

@@ -1,7 +1,6 @@
 package com.miszunXD.medclinic.service;
 
-import com.miszunXD.medclinic.exception.DoubleBookingException;
-import com.miszunXD.medclinic.exception.PatientAlreadyExistsException;
+import com.miszunXD.medclinic.exception.*;
 import com.miszunXD.medclinic.model.Appointment;
 import com.miszunXD.medclinic.model.Doctor;
 import com.miszunXD.medclinic.model.Patient;
@@ -51,12 +50,14 @@ public class ClinicService {
     public void registerAppointment(Appointment appointment) {
         Optional<Doctor> doctor = doctorRepository.findById(appointment.doctorId());
         if (doctor.isEmpty()) {
-            throw new RuntimeException("Taki lekarz nie istnieje!");
+            throw new DoctorNotFoundException("Lekarz o numerze ID: "
+                    + appointment.doctorId() + " nie istnieje!");
         }
 
         Optional<Patient> patient = patientRepository.findByPesel(appointment.patientPesel());
         if (patient.isEmpty()) {
-            throw new RuntimeException("Taki pacjent nie istnieje!");
+            throw new PatientNotFoundException("Pacjent o numerze PESEL: "
+                    + appointment.patientPesel() + " nie istnieje!");
         }
 
         boolean appointmentsCollide = appointmentRepository.findAll().stream()
@@ -93,7 +94,7 @@ public class ClinicService {
         Optional<Appointment> appointment = appointmentRepository.findById(appointmentId);
 
         if (appointment.isEmpty()) {
-            throw new RuntimeException("Nie ma takiej wizyty!");
+            throw new AppointmentNotFoundException("Wizyta o ID: " + appointmentId + " nie istnieje!");
         }
 
         Appointment oldAppointment = appointment.get();
