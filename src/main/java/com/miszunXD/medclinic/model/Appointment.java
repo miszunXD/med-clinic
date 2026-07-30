@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 import java.util.Objects;
 
 public record Appointment(String appointmentId, String doctorId, String patientPesel,
-                          LocalDateTime dateTime, boolean isCancelled)
+                          LocalDateTime dateTime, boolean isCancelled, double price)
         implements Identifiable<String> {
     @Override
     public boolean equals(Object o) {

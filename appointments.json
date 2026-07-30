@@ -3,59 +3,83 @@
   "doctorId" : "DOC-01",
   "patientPesel" : "90051512345",
   "dateTime" : [ 2026, 8, 1, 10, 30 ],
-  "isCancelled" : false
+  "isCancelled" : false,
+  "price" : 250.0
 }, {
   "appointmentId" : "A-101",
   "doctorId" : "DOC-02",
   "patientPesel" : "85022098765",
   "dateTime" : [ 2026, 8, 1, 11, 0 ],
-  "isCancelled" : false
+  "isCancelled" : false,
+  "price" : 250.0
 }, {
   "appointmentId" : "A-102",
   "doctorId" : "DOC-01",
   "patientPesel" : "78110356789",
   "dateTime" : [ 2026, 8, 1, 12, 0 ],
-  "isCancelled" : true
+  "isCancelled" : true,
+  "price" : 250.0
 }, {
   "appointmentId" : "A-103",
   "doctorId" : "DOC-03",
   "patientPesel" : "95072211122",
   "dateTime" : [ 2026, 8, 2, 9, 15 ],
-  "isCancelled" : false
+  "isCancelled" : false,
+  "price" : 250.0
 }, {
   "appointmentId" : "A-104",
   "doctorId" : "DOC-04",
   "patientPesel" : "60011533344",
   "dateTime" : [ 2026, 8, 2, 14, 30 ],
-  "isCancelled" : false
+  "isCancelled" : false,
+  "price" : 250.0
 }, {
   "appointmentId" : "A-105",
   "doctorId" : "DOC-05",
   "patientPesel" : "90051512345",
   "dateTime" : [ 2026, 8, 3, 8, 0 ],
-  "isCancelled" : false
+  "isCancelled" : false,
+  "price" : 250.0
 }, {
   "appointmentId" : "A-106",
   "doctorId" : "DOC-02",
   "patientPesel" : "78110356789",
   "dateTime" : [ 2026, 8, 3, 10, 0 ],
-  "isCancelled" : true
+  "isCancelled" : true,
+  "price" : 250.0
 }, {
   "appointmentId" : "A-107",
   "doctorId" : "DOC-01",
   "patientPesel" : "95072211122",
   "dateTime" : [ 2026, 8, 4, 16, 45 ],
-  "isCancelled" : false
+  "isCancelled" : false,
+  "price" : 250.0
 }, {
   "appointmentId" : "A-110",
   "doctorId" : "DOC-01",
   "patientPesel" : "97031407660",
   "dateTime" : [ 2026, 10, 12, 13, 30 ],
-  "isCancelled" : true
+  "isCancelled" : true,
+  "price" : 250.0
 }, {
   "appointmentId" : "A-112",
   "doctorId" : "DOC-02",
   "patientPesel" : "97031407660",
   "dateTime" : [ 2026, 11, 24, 13, 30 ],
-  "isCancelled" : true
+  "isCancelled" : true,
+  "price" : 250.0
+}, {
+  "appointmentId" : "A-121",
+  "doctorId" : "DOC-03",
+  "patientPesel" : "97031407660",
+  "dateTime" : [ 2026, 12, 12, 13, 30 ],
+  "isCancelled" : false,
+  "price" : 350.0
+}, {
+  "appointmentId" : "A-113",
+  "doctorId" : "DOC-01",
+  "patientPesel" : "60011533344",
+  "dateTime" : [ 2026, 12, 12, 13, 30 ],
+  "isCancelled" : false,
+  "price" : 200.0
 } ]
