@@ -112,4 +112,20 @@ public class ClinicService {
                 .mapToDouble(d -> doctor.visitPrice())
                 .sum();
     }
+
+    public List<Appointment> getAllAppointments() {
+        return appointmentRepository.findAll();
+    }
+
+    public List<Doctor> getAllDoctors() {
+        return doctorRepository.findAll();
+    }
+
+    public List<Patient> getAllPatients() {
+        return patientRepository.findAll();
+    }
+
+    public Doctor getDoctorById(String id) {
+        return doctorRepository.findById(id).orElseThrow();
+    }
 }
