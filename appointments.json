@@ -49,7 +49,7 @@
 }, {
   "appointmentId" : "A-110",
   "doctorId" : "DOC-01",
-  "patientPesel" : "90050367990",
-  "dateTime" : [ 2026, 8, 27, 12, 30 ],
-  "isCancelled" : false
+  "patientPesel" : "97031407660",
+  "dateTime" : [ 2026, 10, 12, 13, 30 ],
+  "isCancelled" : true
 } ]
