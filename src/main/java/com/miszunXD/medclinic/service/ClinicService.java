@@ -19,13 +19,16 @@ public class ClinicService {
     private final AppointmentRepository appointmentRepository;
     private final DoctorRepository doctorRepository;
     private final PatientRepository patientRepository;
+    private final AuditService auditService;
 
     public ClinicService(AppointmentRepository appointmentRepository,
                          DoctorRepository doctorRepository,
-                         PatientRepository patientRepository) {
+                         PatientRepository patientRepository,
+                         AuditService auditService) {
         this.appointmentRepository = appointmentRepository;
         this.doctorRepository = doctorRepository;
         this.patientRepository = patientRepository;
+        this.auditService = auditService;
     }
 
     public void registerPatient(Patient patient) {
@@ -37,6 +40,9 @@ public class ClinicService {
         }
 
         patientRepository.save(patient);
+        auditService.log("Dodano pacjenta: "
+        + patient.fullName()
+        + ", PESEL: " + patient.pesel());
     }
 
     public void registerAppointment(Appointment appointment) {
@@ -59,6 +65,9 @@ public class ClinicService {
         }
 
         appointmentRepository.save(appointment);
+        auditService.log("Umówiono wizytę: " + appointment.appointmentId()
+        + ", lekarz: " + appointment.doctorId()
+        + ", pacjent: " + appointment.patientPesel());
     }
 
     public void cancelAppointment(String appointmentId) {
@@ -79,6 +88,7 @@ public class ClinicService {
         );
 
         appointmentRepository.save(cancelledAppointment);
+        auditService.log(" anulowano wizytę " + appointmentId);
     }
 
     public List<Appointment> patientAppointmentHistory(String pesel) {
