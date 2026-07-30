@@ -20,15 +20,18 @@ public class ClinicService {
     private final DoctorRepository doctorRepository;
     private final PatientRepository patientRepository;
     private final AuditService auditService;
+    private final DiscountService discountService;
 
     public ClinicService(AppointmentRepository appointmentRepository,
                          DoctorRepository doctorRepository,
                          PatientRepository patientRepository,
-                         AuditService auditService) {
+                         AuditService auditService,
+                         DiscountService discountService) {
         this.appointmentRepository = appointmentRepository;
         this.doctorRepository = doctorRepository;
         this.patientRepository = patientRepository;
         this.auditService = auditService;
+        this.discountService = discountService;
     }
 
     public void registerPatient(Patient patient) {
@@ -64,10 +67,26 @@ public class ClinicService {
             throw new DoubleBookingException("Ten termin jest już zarezerwowany. Wybierz inny!");
         }
 
-        appointmentRepository.save(appointment);
+        double finalPrice = discountService.calculateFinalPrice(
+                doctor.get(),
+                patient.get(),
+                appointment.dateTime()
+        );
+
+        Appointment appointmentWithPrice = new Appointment(
+                appointment.appointmentId(),
+                appointment.doctorId(),
+                appointment.patientPesel(),
+                appointment.dateTime(),
+                appointment.isCancelled(),
+                finalPrice
+        );
+
+        appointmentRepository.save(appointmentWithPrice);
         auditService.log("Umówiono wizytę: " + appointment.appointmentId()
         + ", lekarz: " + appointment.doctorId()
-        + ", pacjent: " + appointment.patientPesel());
+        + ", pacjent: " + appointment.patientPesel()
+        + ", cena: " + finalPrice + " PLN");
     }
 
     public void cancelAppointment(String appointmentId) {
@@ -84,7 +103,8 @@ public class ClinicService {
                 oldAppointment.doctorId(),
                 oldAppointment.patientPesel(),
                 oldAppointment.dateTime(),
-                true
+                true,
+                oldAppointment.price()
         );
 
         appointmentRepository.save(cancelledAppointment);
@@ -118,7 +138,7 @@ public class ClinicService {
         return appointmentRepository.findAll().stream()
                 .filter(a -> a.doctorId().equals(doctorId))
                 .filter(a -> !a.isCancelled())
-                .mapToDouble(d -> doctor.visitPrice())
+                .mapToDouble(Appointment::price)
                 .sum();
     }
 

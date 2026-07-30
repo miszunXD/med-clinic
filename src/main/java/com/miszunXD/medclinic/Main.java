@@ -10,6 +10,7 @@ import com.miszunXD.medclinic.repository.DoctorRepository;
 import com.miszunXD.medclinic.repository.PatientRepository;
 import com.miszunXD.medclinic.service.AuditService;
 import com.miszunXD.medclinic.service.ClinicService;
+import com.miszunXD.medclinic.service.DiscountService;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -21,12 +22,14 @@ public class Main {
         DoctorRepository doctorRepository = new DoctorRepository();
         PatientRepository patientRepository = new PatientRepository();
         AuditService auditService = new AuditService();
+        DiscountService discountService = new DiscountService();
 
         ClinicService clinicService = new ClinicService(
                 appointmentRepository,
                 doctorRepository,
                 patientRepository,
-                auditService
+                auditService,
+                discountService
                 );
 
         Scanner scanner = new Scanner(System.in);
@@ -78,7 +81,8 @@ public class Main {
                         a.doctorId() + " | " +
                         a.patientPesel() + " | " +
                         a.dateTime() + " | Czy wizyta jest anulowana: " +
-                        a.isCancelled()
+                        a.isCancelled() + " | " +
+                        a.price() + " PLN"
         ));
     }
 
@@ -137,7 +141,8 @@ public class Main {
                 doctorId,
                 patientPesel,
                 dateTime,
-                false
+                false,
+                0
         );
 
         try {

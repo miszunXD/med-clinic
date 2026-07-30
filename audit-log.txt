@@ -1,2 +1,4 @@
 2026-07-30T20:29:40.031036 - Umówiono wizytę: A-112, lekarz: DOC-02, pacjent: 97031407660
 2026-07-30T20:30:18.353988 -  anulowano wizytę A-112
+2026-07-30T21:13:33.707563 - Umówiono wizytę: A-121, lekarz: DOC-03, pacjent: 97031407660, cena: 350.0 PLN
+2026-07-30T21:16:19.237224 - Umówiono wizytę: A-113, lekarz: DOC-01, pacjent: 60011533344, cena: 200.0 PLN
