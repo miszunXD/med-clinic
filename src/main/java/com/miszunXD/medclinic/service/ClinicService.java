@@ -37,6 +37,7 @@ public class ClinicService {
     }
 
     public void registerPatient(Patient patient) {
+        validatePesel(patient.pesel());
         Optional<Patient> existingPatient = patientRepository.findByPesel(patient.pesel());
 
         if (existingPatient.isPresent()) {
@@ -168,5 +169,11 @@ public class ClinicService {
         doctorRepository.saveAll();
         patientRepository.saveAll();
         appointmentRepository.saveAll();
+    }
+
+    private void validatePesel(String pesel) {
+        if (pesel == null && !pesel.matches("\\d{11}")) {
+            throw new InvalidPeselException("PESEL nie może być pusty i musi zawierać 11 cyfr!");
+        }
     }
 }
