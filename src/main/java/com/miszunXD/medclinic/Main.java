@@ -41,7 +41,7 @@ public class Main {
             System.out.println("8. Wyświetl trzech najdroższych lekarzy");
             System.out.println("9. Lista lekarzy wg specjalizacji");
             System.out.println("10. Łączny przychód wybranego lekarza");
-            System.out.println("0. Wyjście z programu");
+            System.out.println("0. Wyjście z programu i zapis plików");
 
             int choice = scanner.nextInt();
             scanner.nextLine();
@@ -57,7 +57,10 @@ public class Main {
                 case 8 -> printThreeMostExpensiveDoctors(clinicService);
                 case 9 -> printDoctorsCatalogue(clinicService);
                 case 10 -> printDoctorEarnings(scanner, clinicService);
-                case 0 -> running = false;
+                case 0 -> {
+                    exitAndSave(patientRepository, appointmentRepository);
+                    running = false;
+                }
                 default -> System.out.println("Nieznane działanie!");
             }
         }
@@ -203,6 +206,14 @@ public class Main {
                         "Specjalizacja: " + doctor.specialty() + " | " +
                         "Łączny przychód: " + earnings + " PLN"
         );
+    }
+
+    private static void exitAndSave(PatientRepository patientRepository,
+                                    AppointmentRepository appointmentRepository) {
+        patientRepository.savePatients();
+        appointmentRepository.saveAppointments();
+
+        System.out.println("Dane zapisane. Do widzenia!");
     }
 
 }

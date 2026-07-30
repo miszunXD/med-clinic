@@ -4,12 +4,13 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.miszunXD.medclinic.model.Patient;
 
+import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.List;
 import java.util.Optional;
 
 public class PatientRepository {
+    private final static String FILE_NAME = "patients.json";
     private final List<Patient> patients;
     private final ObjectMapper objectMapper;
 
@@ -19,19 +20,28 @@ public class PatientRepository {
     }
 
     private List<Patient> loadPatients() {
-        try (InputStream inputStream = getClass()
-                .getClassLoader()
-                .getResourceAsStream("patients.json")) {
-            if (inputStream == null) {
-                throw new RuntimeException("Brak pliku patients.json");
+        try {
+            File file = new File(FILE_NAME);
+
+            if (!file.exists()) {
+                throw new RuntimeException("Brak pliku " + FILE_NAME);
             }
             return objectMapper.readValue(
-                    inputStream,
+                    file,
                     new TypeReference<List<Patient>>() {}
             );
 
         } catch (IOException e) {
             throw new RuntimeException("Błąd ładowania pliku patients", e);
+        }
+    }
+
+    public void savePatients() {
+        try {
+            objectMapper.writerWithDefaultPrettyPrinter()
+                    .writeValue(new File("patients.json"), patients);
+        } catch (IOException e) {
+            throw new RuntimeException("Nie udało się zapisać pliku", e);
         }
     }
 

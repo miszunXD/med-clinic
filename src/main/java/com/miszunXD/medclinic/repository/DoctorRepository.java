@@ -4,12 +4,13 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.miszunXD.medclinic.model.Doctor;
 
+import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.List;
 import java.util.Optional;
 
 public class DoctorRepository {
+    private final static String FILE_NAME = "doctors.json";
     private final List<Doctor> doctors;
     private final ObjectMapper objectMapper;
 
@@ -19,15 +20,14 @@ public class DoctorRepository {
     }
 
     private List<Doctor> loadDoctors() {
-        try (InputStream inputStream = getClass()
-                .getClassLoader()
-                .getResourceAsStream("doctors.json")) {
+        try {
+            File file = new File(FILE_NAME);
 
-            if (inputStream == null) {
-                throw new RuntimeException("Brak pliku doctors.json");
+            if (!file.exists()) {
+                throw new RuntimeException("Brak pliku " + FILE_NAME);
             }
             return objectMapper.readValue(
-                    inputStream,
+                    file,
                     new TypeReference<List<Doctor>>() {}
             );
         } catch (IOException e) {

@@ -5,12 +5,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.miszunXD.medclinic.model.Appointment;
 
+import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.List;
 import java.util.Optional;
 
 public class AppointmentRepository {
+    private final static String FILE_NAME = "appointments.json";
     private final List<Appointment> appointments;
     private final ObjectMapper objectMapper;
 
@@ -21,20 +22,28 @@ public class AppointmentRepository {
     }
 
     private List<Appointment> loadAppointments() {
-        try (InputStream inputStream = getClass()
-                .getClassLoader()
-                .getResourceAsStream("appointments.json")) {
+        try {
+            File file = new File(FILE_NAME);
 
-            if (inputStream == null) {
-                throw new RuntimeException("Brak pliku appointments.json");
+            if (!file.exists()) {
+                throw new RuntimeException("Brak pliku " + FILE_NAME);
             }
 
             return objectMapper.readValue(
-                    inputStream,
+                    file,
                     new TypeReference<List<Appointment>>() {}
             );
         } catch (IOException e) {
             throw new RuntimeException("Błąd ładowania pliku appointments", e);
+        }
+    }
+
+    public void saveAppointments() {
+        try {
+            objectMapper.writerWithDefaultPrettyPrinter()
+                    .writeValue(new File("appointments.json"), appointments);
+        } catch (IOException e) {
+            throw new RuntimeException("Nie udało się zapisach pliku", e);
         }
     }
 
