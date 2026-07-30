@@ -1,9 +1,6 @@
 package com.miszunXD.medclinic;
 
-import com.miszunXD.medclinic.exception.AppointmentNotFoundException;
-import com.miszunXD.medclinic.exception.DoubleBookingException;
-import com.miszunXD.medclinic.exception.InvalidDateException;
-import com.miszunXD.medclinic.exception.PatientAlreadyExistsException;
+import com.miszunXD.medclinic.exception.*;
 import com.miszunXD.medclinic.model.Appointment;
 import com.miszunXD.medclinic.model.Doctor;
 import com.miszunXD.medclinic.model.Patient;
@@ -122,7 +119,7 @@ public class Main {
         try {
             clinicService.registerPatient(new Patient(pesel, fullName, phoneNumber));
             System.out.println("Pacjent dodany!");
-        } catch (PatientAlreadyExistsException e) {
+        } catch (PatientAlreadyExistsException | InvalidPeselException e) {
             System.out.println(e.getMessage());
         }
     }
