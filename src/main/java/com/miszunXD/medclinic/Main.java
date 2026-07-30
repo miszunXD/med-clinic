@@ -2,6 +2,7 @@ package com.miszunXD.medclinic;
 
 import com.miszunXD.medclinic.exception.AppointmentNotFoundException;
 import com.miszunXD.medclinic.exception.DoubleBookingException;
+import com.miszunXD.medclinic.exception.InvalidDateException;
 import com.miszunXD.medclinic.exception.PatientAlreadyExistsException;
 import com.miszunXD.medclinic.model.Appointment;
 import com.miszunXD.medclinic.model.Doctor;
@@ -9,10 +10,12 @@ import com.miszunXD.medclinic.model.Patient;
 import com.miszunXD.medclinic.repository.AppointmentRepository;
 import com.miszunXD.medclinic.repository.DoctorRepository;
 import com.miszunXD.medclinic.repository.PatientRepository;
+import com.miszunXD.medclinic.service.AppointmentIdGenerator;
 import com.miszunXD.medclinic.service.AuditService;
 import com.miszunXD.medclinic.service.ClinicService;
 import com.miszunXD.medclinic.service.DiscountService;
 
+import java.time.DateTimeException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Scanner;
@@ -24,13 +27,15 @@ public class Main {
         PatientRepository patientRepository = new PatientRepository();
         AuditService auditService = new AuditService();
         DiscountService discountService = new DiscountService();
+        AppointmentIdGenerator idGenerator = new AppointmentIdGenerator();
 
         ClinicService clinicService = new ClinicService(
                 appointmentRepository,
                 doctorRepository,
                 patientRepository,
                 auditService,
-                discountService
+                discountService,
+                idGenerator
                 );
 
         Scanner scanner = new Scanner(System.in);
@@ -123,8 +128,6 @@ public class Main {
     }
 
     private static void registerAppointment(Scanner scanner, ClinicService clinicService) {
-        System.out.println("Podaj ID wizyty: ");
-        String appointmentId = scanner.nextLine();
 
         System.out.println("Podaj ID lekarza: ");
         String doctorId = scanner.nextLine();
@@ -132,12 +135,21 @@ public class Main {
         System.out.println("Podaj PESEL pacjenta: ");
         String patientPesel = scanner.nextLine();
 
-        System.out.println("Podaj datę wizyty (format: RRRR-MM-DDTHH:MM:SS): ");
-        String date = scanner.nextLine();
-        LocalDateTime dateTime = LocalDateTime.parse(date);
+        LocalDateTime dateTime;
+        try {
+            System.out.println("Podaj datę wizyty (format: RRRR-MM-DD): ");
+            String date = scanner.nextLine();
+
+            System.out.println("Podaj godzinę wizyty (format HH:MM): ");
+            String time = scanner.nextLine();
+            dateTime = LocalDateTime.parse(date + "T" + time);
+        } catch (DateTimeException e) {
+            System.out.println("Niepoprawny format daty lub godziny!");
+            return;
+        }
 
         Appointment appointment = new Appointment(
-                appointmentId,
+                null,
                 doctorId,
                 patientPesel,
                 dateTime,

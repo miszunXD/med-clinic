@@ -20,17 +20,20 @@ public class ClinicService {
     private final PatientRepository patientRepository;
     private final AuditService auditService;
     private final DiscountService discountService;
+    private final AppointmentIdGenerator idGenerator;
 
     public ClinicService(AppointmentRepository appointmentRepository,
                          DoctorRepository doctorRepository,
                          PatientRepository patientRepository,
                          AuditService auditService,
-                         DiscountService discountService) {
+                         DiscountService discountService,
+                         AppointmentIdGenerator idGenerator) {
         this.appointmentRepository = appointmentRepository;
         this.doctorRepository = doctorRepository;
         this.patientRepository = patientRepository;
         this.auditService = auditService;
         this.discountService = discountService;
+        this.idGenerator = idGenerator;
     }
 
     public void registerPatient(Patient patient) {
@@ -74,8 +77,10 @@ public class ClinicService {
                 appointment.dateTime()
         );
 
+        String appointmentId = idGenerator.generateId(appointmentRepository.findAll());
+
         Appointment appointmentWithPrice = new Appointment(
-                appointment.appointmentId(),
+                appointmentId,
                 appointment.doctorId(),
                 appointment.patientPesel(),
                 appointment.dateTime(),
@@ -84,7 +89,7 @@ public class ClinicService {
         );
 
         appointmentRepository.save(appointmentWithPrice);
-        auditService.log("Umówiono wizytę: " + appointment.appointmentId()
+        auditService.log("Umówiono wizytę: " + appointmentId
         + ", lekarz: " + appointment.doctorId()
         + ", pacjent: " + appointment.patientPesel()
         + ", cena: " + finalPrice + " PLN");
