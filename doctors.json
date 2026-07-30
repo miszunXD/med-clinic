@@ -1,7 +1,26 @@
-[
-  { "id": "DOC-01", "fullName": "Jan Kowalski", "specialty": "Kardiolog", "visitPrice": 250.0 },
-  { "id": "DOC-02", "fullName": "Anna Nowak", "specialty": "Internista", "visitPrice": 150.0 },
-  { "id": "DOC-03", "fullName": "Piotr Wiśniewski", "specialty": "Chirurg", "visitPrice": 350.0 },
-  { "id": "DOC-04", "fullName": "Maria Kamińska", "specialty": "Kardiolog", "visitPrice": 280.0 },
-  { "id": "DOC-05", "fullName": "Tomasz Lewandowski", "specialty": "Okulista", "visitPrice": 180.0 }
-]
+[ {
+  "id" : "DOC-01",
+  "fullName" : "Jan Kowalski",
+  "specialty" : "Kardiolog",
+  "visitPrice" : 250.0
+}, {
+  "id" : "DOC-02",
+  "fullName" : "Anna Nowak",
+  "specialty" : "Internista",
+  "visitPrice" : 150.0
+}, {
+  "id" : "DOC-03",
+  "fullName" : "Piotr Wiśniewski",
+  "specialty" : "Chirurg",
+  "visitPrice" : 350.0
+}, {
+  "id" : "DOC-04",
+  "fullName" : "Maria Kamińska",
+  "specialty" : "Kardiolog",
+  "visitPrice" : 280.0
+}, {
+  "id" : "DOC-05",
+  "fullName" : "Tomasz Lewandowski",
+  "specialty" : "Okulista",
+  "visitPrice" : 180.0
+} ]

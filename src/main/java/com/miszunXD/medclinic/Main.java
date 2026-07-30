@@ -58,7 +58,7 @@ public class Main {
                 case 9 -> printDoctorsCatalogue(clinicService);
                 case 10 -> printDoctorEarnings(scanner, clinicService);
                 case 0 -> {
-                    exitAndSave(patientRepository, appointmentRepository);
+                    saveAndExit(clinicService);
                     running = false;
                 }
                 default -> System.out.println("Nieznane działanie!");
@@ -208,12 +208,9 @@ public class Main {
         );
     }
 
-    private static void exitAndSave(PatientRepository patientRepository,
-                                    AppointmentRepository appointmentRepository) {
-        patientRepository.savePatients();
-        appointmentRepository.saveAppointments();
-
-        System.out.println("Dane zapisane. Do widzenia!");
+    private static void saveAndExit(ClinicService clinicService) {
+        clinicService.saveAll();
+        System.out.println("Pliki zapisane. Do widzenia!");
     }
 
 }

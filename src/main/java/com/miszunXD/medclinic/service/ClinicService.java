@@ -36,7 +36,7 @@ public class ClinicService {
                     + " o numerze PESEL: " + patient.pesel() + " już istnieje!");
         }
 
-        patientRepository.addPatient(patient);
+        patientRepository.save(patient);
     }
 
     public void registerAppointment(Appointment appointment) {
@@ -58,7 +58,7 @@ public class ClinicService {
             throw new DoubleBookingException("Ten termin jest już zarezerwowany. Wybierz inny!");
         }
 
-        appointmentRepository.addAppointment(appointment);
+        appointmentRepository.save(appointment);
     }
 
     public void cancelAppointment(String appointmentId) {
@@ -78,7 +78,7 @@ public class ClinicService {
                 true
         );
 
-        appointmentRepository.updateAppointment(cancelledAppointment);
+        appointmentRepository.save(cancelledAppointment);
     }
 
     public List<Appointment> patientAppointmentHistory(String pesel) {
@@ -126,5 +126,11 @@ public class ClinicService {
 
     public Doctor getDoctorById(String id) {
         return doctorRepository.findById(id).orElseThrow();
+    }
+
+    public void saveAll() {
+        doctorRepository.saveAll();
+        patientRepository.saveAll();
+        appointmentRepository.saveAll();
     }
 }

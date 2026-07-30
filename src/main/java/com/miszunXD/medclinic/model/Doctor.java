@@ -1,8 +1,12 @@
 package com.miszunXD.medclinic.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.miszunXD.medclinic.repository.Identifiable;
+
 import java.util.Objects;
 
-public record Doctor (String id, String fullName, String specialty, double visitPrice){
+public record Doctor (String id, String fullName, String specialty, double visitPrice)
+implements Identifiable<String> {
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -16,5 +20,10 @@ public record Doctor (String id, String fullName, String specialty, double visit
     @Override
     public int hashCode() {
         return Objects.hashCode(id);
+    }
+
+    @Override
+    public String getId() {
+        return id;
     }
 }
