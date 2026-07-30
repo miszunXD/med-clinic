@@ -8,6 +8,7 @@ import com.miszunXD.medclinic.model.Patient;
 import com.miszunXD.medclinic.repository.AppointmentRepository;
 import com.miszunXD.medclinic.repository.DoctorRepository;
 import com.miszunXD.medclinic.repository.PatientRepository;
+import com.miszunXD.medclinic.service.AuditService;
 import com.miszunXD.medclinic.service.ClinicService;
 
 import java.time.LocalDateTime;
@@ -19,11 +20,14 @@ public class Main {
         AppointmentRepository appointmentRepository = new AppointmentRepository();
         DoctorRepository doctorRepository = new DoctorRepository();
         PatientRepository patientRepository = new PatientRepository();
+        AuditService auditService = new AuditService();
 
         ClinicService clinicService = new ClinicService(
                 appointmentRepository,
                 doctorRepository,
-                patientRepository);
+                patientRepository,
+                auditService
+                );
 
         Scanner scanner = new Scanner(System.in);
         boolean running = true;
