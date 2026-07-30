@@ -3,3 +3,4 @@
 2026-07-30T21:13:33.707563 - Umówiono wizytę: A-121, lekarz: DOC-03, pacjent: 97031407660, cena: 350.0 PLN
 2026-07-30T21:16:19.237224 - Umówiono wizytę: A-113, lekarz: DOC-01, pacjent: 60011533344, cena: 200.0 PLN
 2026-07-30T21:54:31.710085 - Umówiono wizytę: A-122, lekarz: DOC-02, pacjent: 60011533344, cena: 120.0 PLN
+2026-07-30T22:31:14.398022 - Dodano pacjenta: albert gowno, PESEL: 112

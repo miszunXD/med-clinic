@@ -172,7 +172,7 @@ public class ClinicService {
     }
 
     private void validatePesel(String pesel) {
-        if (pesel == null && !pesel.matches("\\d{11}")) {
+        if (pesel == null || !pesel.trim().matches("\\d{11}")) {
             throw new InvalidPeselException("PESEL nie może być pusty i musi zawierać 11 cyfr!");
         }
     }
