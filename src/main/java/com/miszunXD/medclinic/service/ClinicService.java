@@ -8,10 +8,7 @@ import com.miszunXD.medclinic.repository.AppointmentRepository;
 import com.miszunXD.medclinic.repository.DoctorRepository;
 import com.miszunXD.medclinic.repository.PatientRepository;
 
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class ClinicService {
@@ -21,6 +18,7 @@ public class ClinicService {
     private final AuditService auditService;
     private final DiscountService discountService;
     private final AppointmentIdGenerator idGenerator;
+    private final Map<String, TreeSet<Appointment>> doctorSchedule = new HashMap<>();
 
     public ClinicService(AppointmentRepository appointmentRepository,
                          DoctorRepository doctorRepository,
@@ -34,6 +32,12 @@ public class ClinicService {
         this.auditService = auditService;
         this.discountService = discountService;
         this.idGenerator = idGenerator;
+
+        appointmentRepository.findAll().stream()
+                .filter(a -> !a.isCancelled())
+                .forEach(a -> doctorSchedule
+                        .computeIfAbsent(a.doctorId(), id -> new TreeSet<>())
+                        .add(a));
     }
 
     public void registerPatient(Patient patient) {
@@ -64,9 +68,13 @@ public class ClinicService {
                     + appointment.patientPesel() + " nie istnieje!");
         }
 
-        boolean appointmentsCollide = appointmentRepository.findAll().stream()
-                .anyMatch(a -> a.dateTime().equals(appointment.dateTime())
-                        && a.doctorId().equals(appointment.doctorId()));
+        TreeSet<Appointment> appointments =
+                doctorSchedule.getOrDefault(
+                        appointment.doctorId(),
+                        new TreeSet<>());
+
+        boolean appointmentsCollide = appointments.stream()
+                .anyMatch(a -> a.dateTime().equals(appointment.dateTime()));
 
         if (appointmentsCollide) {
             throw new DoubleBookingException("Ten termin jest już zarezerwowany. Wybierz inny!");
@@ -90,6 +98,10 @@ public class ClinicService {
         );
 
         appointmentRepository.save(appointmentWithPrice);
+
+        doctorSchedule
+                .computeIfAbsent(appointment.doctorId(), id -> new TreeSet<>())
+                        .add(appointmentWithPrice);
         auditService.log("Umówiono wizytę: " + appointmentId
         + ", lekarz: " + appointment.doctorId()
         + ", pacjent: " + appointment.patientPesel()
