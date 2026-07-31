@@ -177,8 +177,3 @@ Main.java
 10. Łączny przychód wybranego lekarza
 0. Wyjście i zapis danych
 ```
-
-## Możliwe dalsze rozszerzenia
-
-- graficzny interfejs użytkownika
-- baza danych SQL zami
