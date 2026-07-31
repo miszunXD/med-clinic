@@ -1,34 +1,75 @@
-# MED-CLINIC 🏥
+# 🏥 MED-CLINIC
 
 Aplikacja konsolowa do zarządzania kliniką medyczną napisana w języku Java.
 
-Projekt symuluje podstawowy system obsługi kliniki: zarządzanie lekarzami, pacjentami, wizytami oraz generowanie prostych raportów biznesowych.
+Projekt symuluje podstawowy system obsługi kliniki: zarządzanie lekarzami, pacjentami oraz wizytami. Aplikacja wykorzystuje architekturę warstwową, przechowuje dane w plikach JSON oraz posiada podstawowe mechanizmy walidacji, raportowania i kontroli terminów.
 
-## Technologie
+---
 
-- Java 17
-- Maven
-- Jackson (JSON serialization/deserialization)
-- Stream API
-- LocalDateTime
-- Git / GitHub
+## 🚀 Funkcjonalności
 
-## Architektura projektu
+### 👨‍⚕️ Lekarze
 
-Aplikacja została podzielona na warstwy zgodnie z zasadami separacji odpowiedzialności:
+- Wyświetlanie listy lekarzy
+- Wyszukiwanie lekarza po ID
+- Katalog lekarzy według specjalizacji
+- Raport trzech najdroższych lekarzy
+- Obliczanie przychodu wybranego lekarza
+
+### 👤 Pacjenci
+
+- Dodawanie nowych pacjentów
+- Sprawdzanie unikalności numeru PESEL
+- Walidacja poprawności PESEL
+- Wyświetlanie listy pacjentów
+
+### 📅 Wizyty
+
+- Rezerwacja wizyt
+- Automatyczne generowanie ID wizyty
+- Sprawdzanie dostępności lekarza
+- Blokowanie podwójnej rezerwacji terminu
+- Anulowanie wizyt
+- Historia wizyt pacjenta
+- Sortowanie harmonogramów lekarzy według daty
+
+### 💰 System zniżek
+
+Aplikacja posiada system wyliczania końcowej ceny wizyty.
+
+Obsługiwane są:
+- rabaty dla pacjentów
+- specjalne zasady cenowe
+- wyliczanie końcowej ceny przed zapisaniem wizyty
+
+### 📝 Audyt zmian
+
+Każda ważna operacja jest zapisywana w dzienniku audytu:
+
+- dodanie pacjenta
+- rezerwacja wizyty
+- anulowanie wizyty
+
+---
+
+# 🏗️ Architektura projektu
+
+Projekt został podzielony na warstwy zgodnie z zasadami separacji odpowiedzialności:
 
 ```
 src/main/java/com/miszunXD/medclinic
 
 ├── model
+│   ├── Appointment
 │   ├── Doctor
-│   ├── Patient
-│   └── Appointment
+│   └── Patient
 │
 ├── repository
+│   ├── CrudRepository
+│   ├── AbstractJsonRepository
+│   ├── AppointmentRepository
 │   ├── DoctorRepository
-│   ├── PatientRepository
-│   └── AppointmentRepository
+│   └── PatientRepository
 │
 ├── service
 │   ├── ClinicService
@@ -37,104 +78,158 @@ src/main/java/com/miszunXD/medclinic
 │   └── AppointmentIdGenerator
 │
 ├── exception
-│   └── Custom Exceptions
+│   ├── AppointmentNotFoundException
+│   ├── DoctorNotFoundException
+│   ├── DoubleBookingException
+│   ├── InvalidDateException
+│   ├── InvalidPeselException
+│   ├── PatientAlreadyExistsException
+│   └── PatientNotFoundException
 │
-└── ui
-    └── Menu
+├── ui
+│   └── Menu
+│
+└── Main
 ```
 
-## Funkcjonalności
+---
 
-### 👨‍⚕️ Zarządzanie lekarzami
+# 📦 Technologie
 
-- wyświetlanie listy lekarzy
-- wyszukiwanie lekarza po ID
-- katalog lekarzy według specjalizacji
-- raport trzech najdroższych lekarzy
+- Java 17
+- Maven
+- Jackson Databind
+- Jackson JavaTimeModule
+- JSON jako baza danych
+- Stream API
+- Git / GitHub
 
-### 👤 Zarządzanie pacjentami
+---
 
-- rejestracja nowych pacjentów
-- sprawdzanie unikalności numeru PESEL
-- walidacja poprawności PESEL
-- wyświetlanie listy pacjentów
+# 🧩 Opis warstw
 
-### 📅 Obsługa wizyt
+## Model
 
-- rezerwacja wizyt
-- automatyczne generowanie ID wizyty
-- sprawdzanie dostępności lekarza
-- blokowanie podwójnych rezerwacji
-- anulowanie wizyt
-- historia wizyt pacjenta
+Warstwa zawierająca obiekty domenowe aplikacji:
 
-### 💰 System cen i rabatów
+- `Doctor`
+- `Patient`
+- `Appointment`
 
-Aplikacja posiada system wyliczania końcowej ceny wizyty.
+Modele zostały przygotowane jako rekordy Java oraz posiadają poprawną obsługę `equals()` i `hashCode()`.
 
-Uwzględniane są między innymi:
-- rabaty pacjentów
-- specjalne zasady cenowe
-- końcowa cena zapisywana przy wizycie
+---
 
-### 📊 Raporty biznesowe
+## Repository
 
-Wykorzystując Stream API aplikacja generuje:
+Warstwa odpowiedzialna za komunikację z plikami JSON.
 
-- historię wizyt pacjenta
-- katalog lekarzy według specjalizacji
-- ranking najdroższych lekarzy
-- sumę przychodów wybranego lekarza
+Zastosowano generyczne repozytorium:
 
-## Przechowywanie danych
+- `CrudRepository<T, ID>`
+- `AbstractJsonRepository<T>`
 
-Dane aplikacji przechowywane są w plikach JSON:
+Dzięki temu logika odczytu i zapisu danych jest współdzielona pomiędzy różnymi modelami.
+
+Obsługiwane dane:
 
 ```
 resources/
+
 ├── doctors.json
 ├── patients.json
 └── appointments.json
 ```
 
-Przy uruchomieniu aplikacja ładuje dane do pamięci, a przy zamknięciu zapisuje aktualny stan.
+---
 
-## System harmonogramów lekarzy
+## Service
 
-Dla zarządzania terminami wykorzystano strukturę:
+Warstwa zawierająca logikę biznesową aplikacji.
 
-```
+Najważniejsza klasa:
+
+`ClinicService`
+
+Odpowiada za:
+
+- rejestrację pacjentów
+- obsługę wizyt
+- walidację danych
+- kontrolę konfliktów terminów
+- generowanie raportów
+- współpracę z systemem rabatowym i audytem
+
+---
+
+## UI
+
+Warstwa odpowiedzialna za komunikację z użytkownikiem.
+
+Klasa:
+
+`Menu`
+
+Obsługuje:
+
+- menu konsolowe
+- pobieranie danych od użytkownika
+- wyświetlanie informacji
+- wywoływanie operacji systemowych
+
+---
+
+# 🌳 Harmonogram wizyt lekarzy
+
+Do zarządzania terminami wykorzystano strukturę:
+
+```java
 Map<String, TreeSet<Appointment>>
 ```
 
-Każdy lekarz posiada własny uporządkowany harmonogram wizyt.
+Każdy lekarz posiada własny uporządkowany zbiór wizyt.
 
-`TreeSet` automatycznie sortuje wizyty według daty oraz godziny dzięki implementacji `Comparable` w klasie `Appointment`.
+`TreeSet` automatycznie sortuje wizyty według daty i godziny dzięki implementacji `Comparable` w klasie `Appointment`.
 
-## Audyt zmian
+Pozwala to na:
 
-Każda ważna operacja systemowa jest zapisywana w dzienniku audytu:
+- szybkie sprawdzanie zajętych terminów
+- utrzymanie kolejności wizyt
+- uniknięcie duplikatów
 
-- dodanie pacjenta
-- rezerwacja wizyty
-- anulowanie wizyty
+---
 
-Przykład:
+# 📊 Stream API
 
+Raporty biznesowe zostały wykonane przy użyciu Stream API.
+
+Aplikacja generuje:
+
+- historię wizyt pacjenta
+- ranking najdroższych lekarzy
+- katalog lekarzy według specjalizacji
+- sumę przychodów lekarza
+
+Przykładowo:
+
+```java
+appointmentRepository.findAll()
+        .stream()
+        .filter(...)
+        .mapToDouble(...)
+        .sum();
 ```
-Dodano pacjenta: Jan Kowalski
-Umówiono wizytę: A-108
-Anulowano wizytę: A-102
-```
 
-## Uruchomienie projektu
+---
 
-### Wymagania
+# ▶️ Uruchomienie projektu
+
+## Wymagania
 
 - Java 17+
 - Maven
 
-### Uruchomienie
+## Instalacja
 
 Sklonuj repozytorium:
 
@@ -148,7 +243,7 @@ Przejdź do katalogu projektu:
 cd med-clinic
 ```
 
-Uruchom aplikację:
+Zbuduj projekt:
 
 ```bash
 mvn clean compile
@@ -160,7 +255,9 @@ Następnie uruchom klasę:
 Main.java
 ```
 
-## Przykładowe menu
+---
+
+# 🖥️ Przykładowe menu
 
 ```
 === MED CLINIC ===
@@ -177,3 +274,5 @@ Main.java
 10. Łączny przychód wybranego lekarza
 0. Wyjście i zapis danych
 ```
+
+---
